@@ -78,8 +78,8 @@ pd.set_option('display.float_format', lambda x: '%.5f' % x)
 # Adım 1:  ab_testing_data.xlsx adlı kontrol ve test grubu verilerinden oluşan veri setini okutunuz.
 # Kontrol ve test grubu verilerini ayrı değişkenlere atayınız.
 
-df_c = pd.read_excel("C:/Users/Melekg/Desktop/Miuul/Miuul Dersler/Measurement Problems (Ölçümleme Problemleri)/Case Study II/ABTesti/ab_testing.xlsx", sheet_name = "Control Group")
-df_t = pd.read_excel("C:/Users/Melekg/Desktop/Miuul/Miuul Dersler/Measurement Problems (Ölçümleme Problemleri)/Case Study II/ABTesti/ab_testing.xlsx", sheet_name = "Test Group")
+df_c = pd.read_excel("C:/Users/.../ab_testing.xlsx", sheet_name = "Control Group")
+df_t = pd.read_excel("C:/Users/.../ab_testing.xlsx", sheet_name = "Test Group")
 
 
 # Adım 2: Kontrol ve test grubu verilerini analiz ediniz.
@@ -98,42 +98,24 @@ df_t.info()
 df_c.shape # (40, 4)
 df_t.shape # (40, 4)
 
-# kontrol ve test gruplarında 40ar gözlem ve 4 adet değişken var.
-
-#kontrol grubu için
-# PURCHASE Tıklanan reklamlar sonrası satın alınan ürün sayısı oralaması 550, ortancası 531 normal ddağıldığı izlenimi oluştu.
-# diğer değişkenlerinde normal dağılıma sahip oldugu görülüyor.
-
-#purchase min: 267.02 , max: 801.79
-
-
 
 
 
 # Adım 3: Analiz işleminden sonra concat metodunu kullanarak kontrol ve test grubu verilerini birleştiriniz.
 
-# problemdeki "average bidding'in maximumbidding'den
-# daha fazla dönüşüm getirip getirmediğini" den yola çıkarak.
-# "bidding (teklif)" isminde bir değişken oluşturdum..
-# df_c kontrol setiydi yani mevcut olan bidding türü. o metinde maximum_bidding olarak adlandırılıyor.
-# test seti de average_bidding olarak.
+df_c["Bidding"] = "maximum_bidding" 
 
-df_c["Bidding"] = "maximum_bidding" #df_c ye bidding isminde değişken ata, değeri max_bid olsun
 
 df_c.groupby("Bidding").agg({"Purchase": "mean"})
 
-#                 Purchase
-#Bidding
-#maximum_bidding 550.89406
+
 
 
 df_t["Bidding"] = "average_bidding"
 
 df_t.groupby("Bidding").agg({"Purchase": "mean"})
 
-#                  Purchase
-# Bidding
-# average_bidding 582.10610
+
 
 #ORTALAMALAR BİRBİRİNE YAKIN. IST. OLARAK SINADIGIMIZDA MUHTEMELEN H0 ORT. ARASINDA FARK YOK DIYECEK. (550-582)
 
@@ -155,16 +137,11 @@ df = pd.concat([df_c, df_t], ignore_index = True)
 
 # Adım 2: Kontrol ve test grubu için purchase(kazanç) ortalamalarını analiz ediniz
 
-# Purschase değişenine göre diğer değişkenlerin ortalamalaına baktıgımızda test ve kontrolde
+
 
 df.groupby("Bidding").agg({"Purchase":"mean"})
 
-                 #Purchase
-#Bidding
-#average_bidding 582.10610
-#maximum_bidding 550.89406
 
-#ORTALAMALAR BİRBİRİNE YAKIN. IST. OLARAK SINADIGIMIZDA MUHTEMELEN H0 ORT. ARASINDA FARK YOK DIYECEK
 
 
 
@@ -201,8 +178,7 @@ print('Test Stat = %.4f, p-value = %.4f' % (test_stat, pvalue))
 
 #Test Stat = 0.9589, p-value = 0.1541 > 0.05 H0 REDDEDİLEMEZ. # Normal dağılım varsayımı sağlanmaktadır.
 
-#df.loc[:39, "Purchase"] # df_c
-#df.loc[40:,"Purchase"] #df_t
+
 
 
 
@@ -239,6 +215,8 @@ print('Test Stat = %.4f, p-value = %.4f' % (test_stat, pvalue))
 
 
 # Test Stat = -0.9416, p-value = 0.3493 > 0.05 H0 REDDEDİLEMEZ.
+
+
 # # H0: M1 = M2 # Kontrol ve test grubu purchase(kazanç) ortalamaları arasında fark yok
 
 
@@ -266,7 +244,6 @@ print('Test Stat = %.4f, p-value = %.4f' % (test_stat, pvalue))
 # eski maximum bidding teklif türünden devam edilebilir. yada bu farkındalık bilinerek
 # iki bidding türünün uygulanmasına devam edilebilir.
 # Conversion rate, click through rate oranlarına bakılabilir.
-
 # yada  kontrol ve test verisetinde gözlem sayıları düşüktü. daha fazla gözlem toplanarak
 # tekrar AB testine sokulup ortalama kazanç değerine bakılabilir.
 
